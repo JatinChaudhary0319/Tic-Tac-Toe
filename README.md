@@ -1,6 +1,6 @@
-# tic_tac_toe
+# Tic-Tac-Toe
 
-A new Flutter project.
+A new Flutter project based on Tic Tac Toe game providing functionality of user vs computer implemented by making use of Random().
 
 ## Getting Started
 
