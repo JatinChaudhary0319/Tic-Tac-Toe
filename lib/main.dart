@@ -41,6 +41,7 @@ class _TicTacToeState extends State<TicTacToe> {
   String _chance = 'X';
   String _result = '';
   int _i = 1;
+  List<List<int>> _randval = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1,2], [2, 0], [2, 1], [2, 2]];
 
   // Make a move
   // This function will be called when a player taps on a cell
@@ -56,6 +57,29 @@ class _TicTacToeState extends State<TicTacToe> {
       });
     }
     _i = _i+1;
+  }
+
+  void _compOrUser(int i, int r, int c){
+    setState(() {
+      if(_i%2 == 1){
+        int ct = 0;
+        for(var i in _randval){
+          if((r == i[0])&&(c == i[1])){
+            break;
+          }
+          ct += 1;
+        }
+        _randval.removeRange(ct, ct+1);
+        return _play(r, c);
+      }
+      else{
+        int randomIndex = Random().nextInt(_randval.length);
+        r = _randval[randomIndex][0];
+        c = _randval[randomIndex][1];
+        _randval.remove(_randval[randomIndex]);
+        return _play(r, c);
+      }
+    });
   }
 
   // Check if there is a winner
@@ -110,17 +134,7 @@ class _TicTacToeState extends State<TicTacToe> {
       _chance = "X";
       _result = '';
       _i = 1;
-    });
-  }
-
-  void _comp_or_user(int i, int r, int c){
-    setState(() {
-      if(i%2 == 1){
-      return _play(r, c);
-    }
-    else{
-      return _play(Random().nextInt(3), Random().nextInt(3));
-    }
+      _randval = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1,2], [2, 0], [2, 1], [2, 2]];
     });
   }
 
@@ -148,7 +162,7 @@ class _TicTacToeState extends State<TicTacToe> {
                 int row = index ~/ 3;
                 int col = index % 3;
                 return GestureDetector(
-                  onTap: () =>_comp_or_user(_i, row, col),
+                  onTap: () =>_compOrUser(_i, row, col),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -179,9 +193,9 @@ class _TicTacToeState extends State<TicTacToe> {
           // Display the Rule
           Container(
             padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'Note: For Computer turn tap at any grid!\n\n',
-              style: const TextStyle(
+            child: const Text(
+              'Note: For Computer, turn tap at any grid!\n\n',
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 243, 33, 33),
